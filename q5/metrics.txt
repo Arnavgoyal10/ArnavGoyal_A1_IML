@@ -1,0 +1,19 @@
+Linear Regression Performance:
+Mean Squared Error (MSE): 95.9755
+Coefficient of Determination (R²): 0.6275
+
+Polynomial Regression (Degree 2) Performance:
+Mean Squared Error (MSE): 55.5899
+Coefficient of Determination (R²): 0.7843
+
+Polynomial Regression (Degree 3) Performance:
+Mean Squared Error (MSE): 40.2710
+Coefficient of Determination (R²): 0.8437
+
+Polynomial Regression (Degree 4) Performance:
+Mean Squared Error (MSE): 677.4237
+Coefficient of Determination (R²): -1.6289
+
+Comparison of Models:
+Model with lowest MSE: Polynomial Regression (Degree 3) (MSE: 40.2710)
+Model with highest R²: Polynomial Regression (Degree 3) (R²: 0.8437)
