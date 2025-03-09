@@ -6,7 +6,18 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.utils import shuffle
 
 
-# (b) function for Normalising in B part
+# (a)
+iris = load_iris()
+X, y = iris.data, iris.target
+num_classes = len(np.unique(y))
+
+X, y = shuffle(X, y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.4, random_state=42
+)
+
+
+# (b)
 def preprocess_data(X_train, X_test, method="none"):
     if method == "normalize":
         # Min-Max Normalization: (x - min) / (max - min)
@@ -25,7 +36,11 @@ def preprocess_data(X_train, X_test, method="none"):
     return X_train_scaled, X_test_scaled
 
 
-# (c) Implement Softmax Function and One-Hot Encoding
+# Choose method: 'normalize', 'standardize', or 'none'
+X_train_proc, X_test_proc = preprocess_data(X_train, X_test, method="standardize")
+
+
+# (c)
 def softmax(z):
     z = z - np.max(z, axis=1, keepdims=True)
     exp_z = np.exp(z)
@@ -39,7 +54,12 @@ def one_hot_encode(y, num_classes):
     return one_hot
 
 
-# (d) Implement the Categorical Cross-Entropy Loss Function
+Y_train = one_hot_encode(y_train, num_classes)
+
+
+# (d)
+
+
 def compute_loss(X, Y, W, b):
     """
     Compute the average cross-entropy loss.
@@ -54,7 +74,6 @@ def compute_loss(X, Y, W, b):
     return loss
 
 
-# (d) Implement Batch Gradient Descent Step
 def gradient_descent_step(X, Y, W, b, learning_rate):
     m = X.shape[0]
     logits = np.dot(X, W) + b
@@ -67,7 +86,6 @@ def gradient_descent_step(X, Y, W, b, learning_rate):
     return W, b
 
 
-# (d) Prediction Function
 def predict(X, W, b):
     logits = np.dot(X, W) + b
     probs = softmax(logits)
@@ -104,35 +122,13 @@ def train_model_sgd(X, Y, W, b, learning_rate, epochs):
     return W, b, loss_history
 
 
-# (a) Load the Iris Dataset
-iris = load_iris()
-X, y = iris.data, iris.target
-num_classes = len(np.unique(y))
-# print(X)
-# print("hello")
-# print(y)
-
-# (a) Shuffle and split dataset into training (60%) and test (40%)
-X, y = shuffle(X, y, random_state=42)
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.4, random_state=42
-)
-
-# (b) Preprocess the Data using manual scaling
-# Choose method: 'normalize', 'standardize', or 'none'
-X_train_proc, X_test_proc = preprocess_data(X_train, X_test, method="none")
-
-# (c) One-hot encode labels for training
-Y_train = one_hot_encode(y_train, num_classes)
-
-# (d) Initialize Model Parameters for Both Batch and SGD Methods
 n_features = X_train_proc.shape[1]
 W_batch = np.random.randn(n_features, num_classes) * 0.01
 b_batch = np.zeros(num_classes)
 W_sgd = np.random.randn(n_features, num_classes) * 0.01
 b_sgd = np.zeros(num_classes)
 
-# (e) Training Settings
+
 epochs = 500
 learning_rate = 0.1
 
@@ -182,12 +178,11 @@ final_report = "Evaluation Report\n" + "=" * 30 + "\n"
 final_report += report_batch + "\n" + "=" * 30 + "\n"
 final_report += report_sgd
 
-# Save the final report into a text file
-with open("q4/evaluation_report.txt", "w") as report_file:
+
+with open("q4/evaluation_report_standardize.txt", "w") as report_file:
     report_file.write(final_report)
 
 
-# Plot the loss curves for both training methods
 plt.figure(figsize=(12, 5))
 
 plt.subplot(1, 2, 1)
@@ -206,5 +201,4 @@ plt.grid(True)
 
 plt.tight_layout()
 
-# Save the plot as an image file in the current directory
-plt.savefig("q4/loss_curves.png")
+plt.savefig("q4/loss_curves_standardize.png")
